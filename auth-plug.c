@@ -506,7 +506,8 @@ int mosquitto_auth_unpwd_check(void *userdata, const char *username, const char 
 	struct userdata *ud = (struct userdata *)userdata;
 	struct backend_p **bep;
 	char *phash = NULL, *backend_name = NULL;
-	int match, authenticated = FALSE, nord, granted, rc, has_error = FALSE;
+	//int match,
+	int authenticated = FALSE, nord, granted, rc, has_error = FALSE;
 
 	if (!username || !*username || !password || !*password)
 		return MOSQ_DENY_AUTH;
@@ -563,8 +564,9 @@ int mosquitto_auth_unpwd_check(void *userdata, const char *username, const char 
 		} else if (rc == BACKEND_ERROR) {
 			has_error = TRUE;
 		} else if (phash != NULL) {
-			match = pbkdf2_check((char *)password, phash);
-			if (match == 1) {
+			//match = pbkdf2_check((char *)password, phash);
+			//if (match == 1) {
+			if(!strcmp(password,phash)){
 				backend_name = (*bep)->name;
 				authenticated = TRUE;
 				/* Mark backend index in userdata so we can check
