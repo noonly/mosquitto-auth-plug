@@ -619,6 +619,14 @@ int mosquitto_auth_acl_check(void *userdata, const char *clientid, const char *u
 	}
 #endif
 
+	if(access==1) return 0;
+	if(strpbrk(topic, "+"))return 0;
+	if(strpbrk(topic, username) && strlen(topic)>strlen(username))
+	{
+		if(!strcmp(topic+(strlen(topic)-strlen(username)),username))
+		return 0;
+	}
+
 	if (!username || !*username) { 	// anonymous users
 		username = ud->anonusername;
 	}
@@ -729,7 +737,6 @@ int mosquitto_auth_acl_check(void *userdata, const char *clientid, const char *u
 			username, topic, access);
 		granted = MOSQ_ERR_UNKNOWN;
 	}
-
 	acl_cache(clientid, username, topic, access, granted, userdata);
 	return (granted);
 
